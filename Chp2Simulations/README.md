@@ -1,6 +1,7 @@
 # Simulation of the Multi-Armed Bandit (Sutton & Barto, Ch. 2)
 
-> **Summary:** > Constructed 3 classes of bandits ($\epsilon$-greedy, UCB, and gradient) and conducted multiple experiments to visualize their behavior.
+> **Summary:**
+> Constructed 3 classes of bandits ($\epsilon$-greedy, UCB, and gradient) and conducted multiple experiments to visualize their behavior.
 
 ## Visual Output
 ![Comparison of the performance of 3 types of bandits in a stationary environment](assets/combo_plot.png)
@@ -36,7 +37,9 @@ We must also take into account the conflict between exploration and exploitation
   * $N_t(a)$: the number of times that action $a$ has been selected prior to the $t$-th iteration.
   * $\alpha$: the step-size parameter, which controls how much past information is reflected in the update of $Q_t(a)$ (in the stationary case, $\alpha = \frac{1}{n}$).
 * **Algorithm:** For each iteration, if there are actions that have not been selected yet, choose a random action from that group. If all actions have been selected at least once, the $t$-th action is chosen as follows:
-$$A_t = \text{argmax}_a \left( Q_t(a) + c \sqrt{\frac{\ln t}{N_t(a)}} \right)$$
+
+  $$A_t = \text{argmax}_a \left( Q_t(a) + c \sqrt{\frac{\ln t}{N_t(a)}} \right)$$
+
 * **Handling Non-Stationarity:** While the stationary case uses $\alpha = 1/n$, this causes the agent to become "stubborn" over time. For non-stationary environments where reward means drift, I implemented a constant step-size $\alpha \in (0, 1]$. This effectively weights recent rewards exponentially higher than older ones, allowing the agent to "track" shifting optimal actions. 
 
 ### c. Gradient Bandit
@@ -44,13 +47,20 @@ $$A_t = \text{argmax}_a \left( Q_t(a) + c \sqrt{\frac{\ln t}{N_t(a)}} \right)$$
   * $\pi_t(a)$: the probability of choosing the action $a$ at the $t$-th iteration.
   * $\alpha$: the step-size parameter.
 * **Algorithm:** For each iteration, the action is chosen with respect to the probability distribution $\pi_t(a)$. The values of $\pi_t(a)$ and $H_t(a)$ are updated as follows, where $R_t$ is the reward received at the $t$-th iteration and $\bar{R}_t$ is the average reward obtained prior to the $t$-th iteration:
-$$\pi_t(a) = \text{Pr}\{A_t=a\} = \frac{e^{H_t(a)}}{\sum_{b=1}^k e^{H_t(b)}}$$
-$$H_{t+1}(A_t) = H_t(A_t) + \alpha (R_t - \bar{R}_t)(1 - \pi_t(A_t)) \quad \text{and}$$
-$$H_{t+1}(a) = H_t(a) - \alpha (R_t - \bar{R}_t)\pi_t(a) \quad \text{for all } a \neq A_t$$
+
+  $$
+  \begin{aligned}
+  \pi_t(a) &= \frac{e^{H_t(a)}}{\sum_{b=1}^k e^{H_t(b)}} \\
+  H_{t+1}(A_t) &= H_t(A_t) + \alpha (R_t - \bar{R}_t)(1 - \pi_t(A_t)) \\
+  H_{t+1}(a) &= H_t(a) - \alpha (R_t - \bar{R}_t)\pi_t(a) \quad \text{for all } a \neq A_t
+  \end{aligned}
+  $$
 
 ## 3. Engineering Trade-offs & Edge Cases
 * **Avoiding Overflow:** Because $e^x$ grows explosively as $x$ increases, floating-point overflow is a risk in the gradient bandit. For each iteration, I calculated $h_t = \max_a H_t(a)$, subtracted it from both the numerator and denominator exponents, and calculated $\pi_t(a)$ as follows:
-$$\pi_t(a) = \frac{e^{H_t(a)-h_t}}{\sum_{b=1}^k e^{H_t(b)-h_t}}$$
+
+  $$\pi_t(a) = \frac{e^{H_t(a)-h_t}}{\sum_{b=1}^k e^{H_t(b)-h_t}}$$
+
 * **Using a Baseline to Reduce Variance:** In the gradient bandit, using $\bar{R}_t$ (the average reward) acts as a baseline. Mathematically, it doesn't change the expected update, but it significantly reduces variance. In simulations, removing this baseline led to much slower convergence, especially when the mean rewards of all arms were shifted far from zero.
 
 ## 4. Quick Start
