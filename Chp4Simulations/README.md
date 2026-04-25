@@ -22,13 +22,11 @@ $$V(s) = \max_{a} \sum_{s'} p(s'\mid s,a)V(s')$$
 
 **Environment 1: Constant Probability (Textbook Baseline)**
 The probability of heads is static, representing infinite liquidity:
-$$p(s+a \mid s,a) = 0.4$$
-$$p(s-a \mid s,a) = 0.6$$
+$$p(s+a \mid s,a) = 0.4, \quad p(s-a \mid s,a) = 0.6$$
 
 **Environment 2: Exponential Decay (Market Slippage)**
 The win probability decreases exponentially as the stake size increases, simulating order book slippage on large trades ($p_0 = 0.4, k = 0.05$):
-$$p(s+a \mid s,a) = p_0 e^{-ka}$$
-$$p(s-a \mid s,a) = 1 - p_0 e^{-ka}$$
+$$p(s+a \mid s,a) = p_0 e^{-ka}, \quad p(s-a \mid s,a) = 1 - p_0 e^{-ka}$$
 
 The Value Iteration sweeps terminate when the maximum value update ($\Delta$) falls below the threshold $\theta = 10^{-5}$.
 
