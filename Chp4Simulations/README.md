@@ -36,7 +36,7 @@ The Value Iteration sweeps terminate when the maximum value update ($\Delta$) fa
 
 ## 4. Quick Start
 ```bash
-git clone [https://github.com/Sh1ntaro05/RL_seminar.git](https://github.com/Sh1ntaro05/RL_seminar.git)
+git clone https://github.com/Sh1ntaro05/RL_seminar.git
 cd RL_seminar/Chp4Simulations
 pip install -r requirements.txt
 python gamblers_problem.py
