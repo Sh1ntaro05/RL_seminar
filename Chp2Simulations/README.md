@@ -75,7 +75,7 @@ $$\pi_t(a) = \frac{e^{H_t(a)-h_t}}{\sum_{b=1}^k e^{H_t(b)-h_t}}$$
 ## 4. Quick Start
 
 ```bash
-git clone [https://github.com/Sh1ntaro05/RL_seminar.git](https://github.com/Sh1ntaro05/RL_seminar.git)
+git clone https://github.com/Sh1ntaro05/RL_seminar.git
 cd RL_seminar/Chp2Simulations
 pip install -r requirements.txt
 python experiment_combo.py
